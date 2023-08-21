@@ -5,10 +5,12 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  ParseIntPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { CreateTweet, SignUpDto } from './dtos/user.dto';
+import { CreateTweet, GetTweetsQuery, SignUpDto } from './dtos/user.dto';
 
 @Controller()
 export class AppController {
@@ -28,6 +30,7 @@ export class AppController {
         'All fields are required!',
         HttpStatus.BAD_REQUEST,
       );
+      throw error;
     }
   }
 
@@ -39,6 +42,22 @@ export class AppController {
       if (error.name === 'UNAUTHORIZED') {
         throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
       }
+      throw error;
+    }
+  }
+
+  @Get('tweets')
+  getTweets(@Query() params: GetTweetsQuery) {
+    try {
+      return this.appService.GetTweets({ page: params?.page ? Number(params.page) : undefined });
+    } catch (error) {
+      if (error.name === 'INVALID_PAGE') {
+        throw new HttpException(
+          'Informe uma página válida!',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      throw error;
     }
   }
 }

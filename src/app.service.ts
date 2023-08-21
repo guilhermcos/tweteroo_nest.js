@@ -23,4 +23,22 @@ export class AppService {
     this.tweets.push(new Tweet(user, body.tweet));
     return 'OK';
   }
+
+  GetTweets({ page = 1 }) {
+    if (page <= 0) {
+      throw {
+        name: 'INVALID_PAGE',
+      };
+    }
+    let initial = this.tweets.length - 15 * page;
+    initial = Math.max(initial, 0);
+    let final = this.tweets.length - 15 * (page - 1);
+    const lastTweets = this.tweets.slice(initial, final);
+
+    return lastTweets.map((tweet) => ({
+      username: tweet.user.username,
+      avatar: tweet.user.avatar,
+      tweet: tweet.tweet,
+    }));
+  }
 }
