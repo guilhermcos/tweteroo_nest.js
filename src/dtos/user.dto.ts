@@ -20,3 +20,21 @@ export class SignUpDto {
   )
   avatar: string;
 }
+
+export class CreateTweet {
+  @IsNotEmpty({
+    message: 'All fields are required!',
+  })
+  @IsString({
+    message: 'All fields are required!',
+  })
+  username: string;
+
+  @IsNotEmpty({
+    message: 'All fields are required!',
+  })
+  @IsString({
+    message: 'All fields are required!',
+  })
+  tweet: string;
+}

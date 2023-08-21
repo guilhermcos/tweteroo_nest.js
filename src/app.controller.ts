@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { SignUpDto } from './dtos/user.dto';
+import { CreateTweet, SignUpDto } from './dtos/user.dto';
 
 @Controller()
 export class AppController {
@@ -28,6 +28,17 @@ export class AppController {
         'All fields are required!',
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  @Post('tweets')
+  tweet(@Body() body: CreateTweet) {
+    try {
+      return this.appService.CreateTweet(body);
+    } catch (error) {
+      if (error.name === 'UNAUTHORIZED') {
+        throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
+      }
     }
   }
 }
