@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Tweet } from './entities/tweet.entity';
 import { User } from './entities/user.entity';
-import { CreateTweet, SignUpDto } from './dtos/user.dto';
+import { SignUpDto } from './dtos/user.dto';
+import { CreateTweet } from './dtos/tweet.dto';
 
 @Injectable()
 export class AppService {
@@ -17,14 +18,14 @@ export class AppService {
     return 'OK';
   }
 
-  CreateTweet(body: CreateTweet) {
+  createTweet(body: CreateTweet) {
     const user = this.users.find((user) => user.username === body.username);
     if (!user) throw { name: 'UNAUTHORIZED' };
     this.tweets.push(new Tweet(user, body.tweet));
     return 'OK';
   }
 
-  GetTweets({ page = 1 }) {
+  getTweets({ page = 1 }) {
     if (page <= 0) {
       throw {
         name: 'INVALID_PAGE',
@@ -35,10 +36,13 @@ export class AppService {
     let final = this.tweets.length - 15 * (page - 1);
     const lastTweets = this.tweets.slice(initial, final);
 
-    return lastTweets.map((tweet) => ({
-      username: tweet.user.username,
-      avatar: tweet.user.avatar,
-      tweet: tweet.tweet,
-    }));
+    return lastTweets.map((tweet) => tweet.formatTweetWithAvatar());
+  }
+
+  getTweetsByUsername(username: string) {
+    const tweetsByUser = this.tweets.filter(
+      (tweet) => tweet.user.username === username,
+    );
+    return tweetsByUser.map((tweet) => tweet.formatTweetWithAvatar());
   }
 }

@@ -1,14 +1,4 @@
-import {
-  IS_URL,
-  IsInt,
-  IsNotEmpty,
-  IsNumberString,
-  IsOptional,
-  IsPositive,
-  IsString,
-  IsUrl,
-  isURL,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 export class SignUpDto {
   @IsNotEmpty({
@@ -29,33 +19,4 @@ export class SignUpDto {
     },
   )
   avatar: string;
-}
-
-export class CreateTweet {
-  @IsNotEmpty({
-    message: 'All fields are required!',
-  })
-  @IsString({
-    message: 'All fields are required!',
-  })
-  username: string;
-
-  @IsNotEmpty({
-    message: 'All fields are required!',
-  })
-  @IsString({
-    message: 'All fields are required!',
-  })
-  tweet: string;
-}
-
-export class GetTweetsQuery {
-  @IsOptional()
-  @IsNumberString(
-    {},
-    {
-      message: 'Informe uma página válida!',
-    },
-  )
-  page?: string;
 }

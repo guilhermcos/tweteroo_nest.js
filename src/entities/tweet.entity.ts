@@ -8,6 +8,14 @@ export class Tweet {
     this._tweet = tweet;
   }
 
+  formatTweetWithAvatar() {
+    return {
+      username: this._user.username,
+      avatar: this._user.avatar,
+      tweet: this._tweet,
+    };
+  }
+
   get user() {
     return this._user;
   }

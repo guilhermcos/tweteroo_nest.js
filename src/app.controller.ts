@@ -5,12 +5,14 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Param,
   ParseIntPipe,
   Post,
   Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { CreateTweet, GetTweetsQuery, SignUpDto } from './dtos/user.dto';
+import { SignUpDto } from './dtos/user.dto';
+import { CreateTweet, GetTweetsQuery } from './dtos/tweet.dto';
 
 @Controller()
 export class AppController {
@@ -37,7 +39,7 @@ export class AppController {
   @Post('tweets')
   tweet(@Body() body: CreateTweet) {
     try {
-      return this.appService.CreateTweet(body);
+      return this.appService.createTweet(body);
     } catch (error) {
       if (error.name === 'UNAUTHORIZED') {
         throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
@@ -47,9 +49,11 @@ export class AppController {
   }
 
   @Get('tweets')
-  getTweets(@Query() params: GetTweetsQuery) {
+  getTweets(@Query() query: GetTweetsQuery) {
     try {
-      return this.appService.GetTweets({ page: params?.page ? Number(params.page) : undefined });
+      return this.appService.getTweets({
+        page: query?.page ? Number(query.page) : undefined,
+      });
     } catch (error) {
       if (error.name === 'INVALID_PAGE') {
         throw new HttpException(
@@ -59,5 +63,10 @@ export class AppController {
       }
       throw error;
     }
+  }
+
+  @Get('tweets/:username')
+  getTweetsByUsername(@Param('username') username: string) {
+    return this.appService.getTweetsByUsername(username);
   }
 }
